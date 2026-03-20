@@ -3,60 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chomnol App</title>
+    <title>Chomnol - Smart POS & Store Management</title>
+    <!-- Tailwind CSS for rapid modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- AOS for beautiful scroll animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        km: ['Kantumruy Pro', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#00d4aa',
+                        dark: '#0f1117',
+                        card: 'rgba(26, 29, 46, 0.7)',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-            color: #333;
-            background-color: #f9f9f9;
+        body { background-color: #0f1117; color: #e2e4e9; overflow-x: hidden; }
+        .glass { background: rgba(26, 29, 46, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .gradient-text { background: linear-gradient(135deg, #00d4aa 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .blob { position: absolute; filter: blur(80px); z-index: -1; opacity: 0.4; }
+        .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: rgba(0, 212, 170, 0.3); border-radius: 50%; }
+        .blob-2 { bottom: -10%; right: -10%; width: 600px; height: 600px; background: rgba(59, 130, 246, 0.3); border-radius: 50%; }
+        
+        /* Mobile UI Mockup CSS */
+        .phone-mockup {
+            width: 300px; height: 620px;
+            border-radius: 40px;
+            background: #12141c;
+            border: 8px solid #2a2d3e;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
         }
-        h1, h2 {
-            color: #2c3e50;
+        .phone-notch {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 25px; background: #2a2d3e;
+            border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;
+            z-index: 10;
         }
-        a {
-            color: #3498db;
-        }
-        section {
-            margin-bottom: 30px;
-        }
-        .footer {
-            font-size: 0.9em;
-            color: #777;
-            text-align: center;
-            margin-top: 50px;
+        .phone-mockup::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+            pointer-events: none;
         }
     </style>
 </head>
-<body>
-    <header>
-        <h1>Chomnol (ចំណូល) App</h1>
-        <p>Chomnol is a mobile application that allows users to upload, edit, and manage images with ease. Our goal is to provide a simple and safe platform for creative image interaction.</p>
-    </header>
+<body class="antialiased font-sans relative">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
-    <section>
-        <h2>Privacy Policy</h2>
-        <p>We value your privacy. This Privacy Policy explains how we handle your data:</p>
-        <ul>
-            <li><strong>Information We Collect:</strong> Images you upload, app usage data.</li>
-            <li><strong>How We Use Information:</strong> To provide and improve app features, and process your uploads.</li>
-            <li><strong>Permissions:</strong> Camera (to take photos), Storage (to upload images).</li>
-            <li><strong>Data Storage & Security:</strong> Images are stored securely. We do not sell or share your data with third parties.</li>
-            <li><strong>User Rights:</strong> You can contact us anytime to delete your data.</li>
-        </ul>
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/30">
+                    C
+                </div>
+                <span class="text-2xl font-bold font-km tracking-tight text-white">Chomnol <span class="text-sm text-gray-400 font-normal">ចំណូល</span></span>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-gray-300">
+                <a href="#features" class="hover:text-primary transition-colors">Features</a>
+                <a href="#how-it-works" class="hover:text-primary transition-colors">How it works</a>
+                <a href="privacy.html" class="hover:text-primary transition-colors">Privacy Policy</a>
+            </div>
+            <a href="#download" class="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors shadow-lg">Get the App</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-16">
+            <div class="flex-1 text-center lg:text-left" data-aos="fade-up" data-aos-duration="1000">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border outline-white/10 text-primary text-sm font-medium mb-6">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    Available soon on Google Play
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+                    Smart POS for <br />
+                    <span class="gradient-text">Modern Business</span>
+                </h1>
+                <p class="text-lg lg:text-xl text-gray-400 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-km">
+                    Manage your store, track inventory with AI, chat with customers, and print receipts from anywhere. គ្រប់គ្រងអាជីវកម្មរបស់អ្នកយ៉ាងងាយស្រួលនៅលើទូរស័ព្ទដៃ។
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#download" class="px-8 py-4 rounded-full bg-gradient-to-r from-primary to-blue-500 text-white font-bold text-lg hover:shadow-lg hover:shadow-primary/30 transition-all flex items-center justify-center gap-2 transform hover:-translate-y-1">
+                        <i class="fab fa-google-play"></i> Get on Play Store
+                    </a>
+                    <a href="#features" class="px-8 py-4 rounded-full glass text-white font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                        Explore Features
+                    </a>
+                </div>
+                
+                <div class="mt-12 flex items-center justify-center lg:justify-start gap-8 text-gray-400 text-sm font-medium">
+                    <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary"></i> Free Trial</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary"></i> Khmer & English</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary"></i> Secure Cloud</div>
+                </div>
+            </div>
+            
+            <div class="flex-1 flex justify-center lg:justify-end relative" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
+                <!-- Decorative Elements -->
+                <div class="absolute top-20 right-20 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-primary/20 rounded-full blur-2xl"></div>
+                
+                <!-- Mockup -->
+                <div class="phone-mockup transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                    <div class="phone-notch"></div>
+                    <!-- Mockup content mimicking the app -->
+                    <div class="h-full w-full bg-[#f8fafc] flex flex-col">
+                        <div class="bg-primary px-6 pt-12 pb-6 rounded-b-3xl">
+                            <div class="flex justify-between items-center text-white mb-6">
+                                <div>
+                                    <p class="text-sm opacity-80">Welcome back,</p>
+                                    <h3 class="text-xl font-bold">Store Admin</h3>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-bell"></i></div>
+                            </div>
+                            <div class="glass border-white/20 rounded-2xl p-4 text-white">
+                                <p class="text-sm opacity-80 mb-1">Today's Revenue</p>
+                                <h2 class="text-3xl font-bold">$1,240.50</h2>
+                            </div>
+                        </div>
+                        <div class="flex-1 p-6 text-slate-800">
+                            <div class="flex justify-between items-end mb-4">
+                                <h3 class="font-bold text-lg">Quick Actions</h3>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-2 text-primary">
+                                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-xl"><i class="fas fa-camera"></i></div>
+                                    <span class="text-xs font-semibold text-slate-600">AI Search</span>
+                                </div>
+                                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-2 text-blue-500">
+                                    <div class="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-xl"><i class="fas fa-plus"></i></div>
+                                    <span class="text-xs font-semibold text-slate-600">New Product</span>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 mb-4">
+                                <div class="flex justify-between mb-2">
+                                    <span class="font-bold text-sm">Recent Order #10024</span>
+                                    <span class="text-primary font-bold text-sm">+$45.00</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-xs text-slate-400">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded-md font-medium">Completed</span>
+                                    <span>Just now</span>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                                <div class="flex justify-between mb-2">
+                                    <span class="font-bold text-sm">Recent Order #10023</span>
+                                    <span class="text-primary font-bold text-sm">+$12.50</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-xs text-slate-400">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded-md font-medium">Completed</span>
+                                    <span>5 mins ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Bottom Bar -->
+                        <div class="bg-white border-t border-slate-100 px-6 py-4 flex justify-between items-center text-slate-400">
+                            <i class="fas fa-home text-primary text-xl"></i>
+                            <i class="fas fa-box text-xl"></i>
+                            <div class="w-12 h-12 bg-primary rounded-full text-white flex items-center justify-center shadow-lg -mt-8 text-xl"><i class="fas fa-qrcode"></i></div>
+                            <i class="fas fa-comment text-xl relative"><span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span></i>
+                            <i class="fas fa-cog text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section>
-        <h2>Contact</h2>
-        <p>If you have questions or concerns about Chomnol App, please contact us at:</p>
-        <p><a href="mailto:chomnol.app@gmail.com">chomnol.app@gmail.com</a></p>
+    <!-- Features Section -->
+    <section id="features" class="py-24 relative bg-dark">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl lg:text-5xl font-bold mb-4">Everything you need to <span class="gradient-text">succeed</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Powerful features packed into an elegant, easy-to-use mobile interface.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white text-2xl mb-6 shadow-lg">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">AI Image Search</h3>
+                    <p class="text-gray-400">Find products instantly by snapping a photo. Our CLIP AI perfectly matches your camera output to your inventory.</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="glass p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-green-500 flex items-center justify-center text-white text-2xl mb-6 shadow-lg">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Smart Inventory</h3>
+                    <p class="text-gray-400">Keep track of your products, variants, and stock levels effortlessly. Never run out of your best-selling items.</p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="glass p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white text-2xl mb-6 shadow-lg">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Orders & Receipts</h3>
+                    <p class="text-gray-400">Track orders in real-time. Generate and share beautiful digital receipts directly with your customers.</p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="glass p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="400">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white text-2xl mb-6 shadow-lg">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Live Chat</h3>
+                    <p class="text-gray-400">Communicate with customers directly within the app. Share product details and inquiries seamlessly.</p>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="glass p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="500">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white text-2xl mb-6 shadow-lg">
+                        <i class="fas fa-globe-asia"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white font-km">Khmer & English</h3>
+                    <p class="text-gray-400 font-km">ផ្លាស់ប្តូរភាសាបានយ៉ាងងាយស្រួល។ រចនាឡើងជាពិសេសសម្រាប់អាជីវកម្មនៅកម្ពុជា។</p>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="glass p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="600">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-500 to-gray-500 flex items-center justify-center text-white text-2xl mb-6 shadow-lg">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Cloud Sync</h3>
+                    <p class="text-gray-400">Your data is securely backed up and synced in real-time across all your devices using reliable cloud infrastructure.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <footer class="footer">
-        &copy; 2026 Chomnol App. All rights reserved.
+    <!-- Call to Action -->
+    <section id="download" class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-500/20"></div>
+        <div class="max-w-4xl mx-auto px-6 relative z-10 text-center" data-aos="zoom-in">
+            <h2 class="text-4xl lg:text-5xl font-bold mb-6 text-white">Ready to transform your retail business?</h2>
+            <p class="text-xl text-gray-300 mb-10">Join other modern businesses using Chomnol to grow their store.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#" class="px-8 py-4 rounded-full bg-white text-black font-bold text-lg hover:bg-gray-200 transition-all flex items-center justify-center gap-3">
+                    <i class="fab fa-google-play text-2xl text-green-500"></i>
+                    <div class="text-left leading-tight">
+                        <div class="text-[10px] uppercase font-bold text-gray-500">Get it on</div>
+                        <div>Google Play</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass border-t border-white/10 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center text-white font-bold text-lg">C</div>
+                        <span class="text-xl font-bold text-white tracking-tight">Chomnol</span>
+                    </div>
+                    <p class="text-gray-400 mb-6 max-w-sm">The smartest mobile POS system for modern retail businesses in Cambodia and beyond.</p>
+                    <div class="flex gap-4">
+                        <a href="mailto:chomnol.app@gmail.com" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Product</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#features" class="hover:text-primary transition-colors">Features</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="privacy.html" class="hover:text-primary transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+                <p>&copy; 2026 Chomnol. All rights reserved.</p>
+                <p>Made with &hearts; for modern merchants.</p>
+            </div>
+        </div>
     </footer>
+
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: true,
+            offset: 50,
+        });
+    </script>
 </body>
 </html>
